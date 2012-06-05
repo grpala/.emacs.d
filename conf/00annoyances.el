@@ -39,3 +39,7 @@
 (setq tab-width 3)
 (setq default-tab-width 3)
 (setq indent-tabs-mode nil)
+
+;; Fix system-name in OS X
+(if (eq system-type 'darwin)
+   (setq system-name (car (split-string system-name "\\."))) )
