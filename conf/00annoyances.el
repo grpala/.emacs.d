@@ -9,14 +9,15 @@
 ;; *scratch* limpio
 (setq initial-scratch-message nil)
 
-;; Wrapping
-(setq word-wrap t)
+;; Enable advanced functions
+(put 'erase-buffer 'disabled nil)
 
 ;; Use legacy-style regions
 (setq transient-mark-mode nil)
 
 ;; Use X clipboard for any copy-paste related action
-(setq x-select-enable-clipboard t)
+(setq x-select-enable-clipboard nil)
+(setq x-select-enable-primary t)
 
 ;; Add a new-line at the end of every file when saving
 (setq-default require-final-newline t)
@@ -25,21 +26,26 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Remove every trailing blank line when saving
-(add-hook 'before-save-hook 'delete-blank-lines)
+(add-hook 'before-save-hook
+   (lambda ()
+      (interactive)
+      (save-excursion
+         (end-of-buffer)
+         (delete-blank-lines) ) ) )
 
 ;; Disable overwrite-mode
 (put 'overwrite-mode 'disabled t)
 
 ;; Disable windows-like crap
-(setq tool-bar-mode nil)
-(setq menu-bar-mode nil)
-(setq scroll-bar-mode nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control))))
+(setq column-number-mode t)
 
-;; Tabs
-(setq tab-width 3)
-(setq default-tab-width 3)
-(setq indent-tabs-mode nil)
+;; Don't open once completed
+(setq ido-confirm-unique-completion t)
 
-;; Fix system-name in OS X
-(if (eq system-type 'darwin)
-   (setq system-name (car (split-string system-name "\\."))) )
+;; OS X
+(when (eq system-type 'darwin)
+   ;; Fix system-name
+   (setq system-name (car (split-string system-name "\\.")))
+   ;; Right-alt is for symbols
+   (setq ns-right-alternate-modifier 'none) )
